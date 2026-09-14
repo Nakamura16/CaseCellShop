@@ -1,20 +1,27 @@
 import Fastify from "fastify";
+import { createDatabase } from "./Database/database";
 
 const app = Fastify({
   logger: true,
 });
 
-app.get("/", async () => {
-  return {
-    message: "CaseCellShop API is running!",
-  };
-});
+async function start() {
+  const database = await createDatabase();
 
-app.listen({ port: 3000 }, (error, address) => {
-  if (error) {
-    app.log.error(error);
-    process.exit(1);
-  }
+  app.get("/", async () => {
+    return {
+      message: "CaseCellShop API is running!",
+    };
+  });
 
-  console.log(`API running at ${address}`);
+  await app.listen({
+    port: 3000,
+  });
+
+  console.log("Database connected");
+}
+
+start().catch((error) => {
+  app.log.error(error);
+  process.exit(1);
 });
