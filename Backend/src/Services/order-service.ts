@@ -53,7 +53,12 @@ export class OrderService {
         updatedAt,
       );
 
-      const orderItem = this.createOrderItem(order, product.price);
+      const orderItem = this.createOrderItem(
+        order,
+        product.id,
+        request.quantity,
+        product.price,
+      );
 
       await this.orderRepository.create(order);
       await this.orderRepository.createItem(orderItem);
@@ -100,12 +105,17 @@ export class OrderService {
     };
   }
 
-  private createOrderItem(order: Order, unitPrice: number): OrderItem {
+  private createOrderItem(
+    order: Order,
+    productId: string,
+    quantity: number,
+    unitPrice: number,
+  ): OrderItem {
     return {
       id: randomUUID(),
       orderId: order.id,
-      productId: "",
-      quantity: 0,
+      productId,
+      quantity,
       unitPrice,
     };
   }

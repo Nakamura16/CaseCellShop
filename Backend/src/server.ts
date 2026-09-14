@@ -1,7 +1,16 @@
 import Fastify from "fastify";
+
 import { createDatabase } from "./Database/database";
 import { seedDatabase } from "./Database/seed";
-import { ProductService } from "./routes/product-service";
+
+import { ProductService } from "./Services/product-service";
+import { ProductRepository } from "./Repositories/Implementation/product-repository";
+
+import { OrderRepository } from "./Repositories/Implementation/order-repository";
+import { OrderService } from "./Services/order-service";
+
+import { productRoutes } from "./routes/product-routes";
+import { orderRoutes } from "./routes/order-routes";
 
 const app = Fastify({
   logger: true,
@@ -9,36 +18,31 @@ const app = Fastify({
 
 async function start() {
   const database = await createDatabase();
+
   await seedDatabase(database);
 
-  const productService = new ProductService(database);
+  // Repositories
+  const productRepository = new ProductRepository(database);
+  const orderRepository = new OrderRepository(database);
+
+  // Services
+  const productService = new ProductService(productRepository);
+
+  const orderService = new OrderService(
+    database,
+    orderRepository,
+    productRepository,
+  );
+
+  // Routes
+  await productRoutes(app, productService);
+  await orderRoutes(app, orderService);
 
   app.get("/", async () => {
     return {
       message: "CaseCellShop API is running!",
     };
   });
-
-  app.get("/products", async () => {
-    return productService.getAll();
-  });
-
-  app.get<{ Params: { id: string } }>(
-    "/products/:id",
-    async (request, reply) => {
-      const { id } = request.params;
-
-      const product = await productService.getById(id);
-
-      if (!product) {
-        return reply.code(404).send({
-          message: "Product not found",
-        });
-      }
-
-      return product;
-    },
-  );
 
   await app.listen({
     port: 3000,
