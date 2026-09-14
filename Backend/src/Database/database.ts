@@ -19,16 +19,6 @@ export async function createDatabase() {
       created_at TEXT NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS products (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT,
-        price REAL NOT NULL CHECK (price >= 0),
-        stock INTEGER NOT NULL CHECK (stock >= 0),
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
-
     CREATE TABLE IF NOT EXISTS orders (
         id TEXT PRIMARY KEY,
         idempotency_key TEXT NOT NULL UNIQUE,
