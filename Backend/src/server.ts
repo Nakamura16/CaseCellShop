@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 
 import { createDatabase } from "./Database/database";
 import { seedDatabase } from "./Database/seed";
@@ -17,11 +18,15 @@ import { registerErrorHandler } from "./Error/error-handler";
 const app = Fastify({
   logger: true,
 });
-registerErrorHandler(app);
 
 async function start() {
-  const database = await createDatabase();
+  await app.register(cors, {
+    origin: "http://localhost:3001",
+  });
 
+  registerErrorHandler(app);
+
+  const database = await createDatabase();
   await seedDatabase(database);
 
   // Repositories
