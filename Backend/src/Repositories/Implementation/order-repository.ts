@@ -24,6 +24,22 @@ export class OrderRepository implements IOrderRepository {
     );
   }
 
+  async getAll(): Promise<Order[]> {
+    return this.database.all<Order[]>(
+      `
+    SELECT
+      id,
+      idempotency_key AS idempotencyKey,
+      status,
+      total_amount AS totalAmount,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM orders
+    ORDER BY created_at DESC
+    `,
+    );
+  }
+
   async create(order: Order): Promise<void> {
     await this.database.run(
       `

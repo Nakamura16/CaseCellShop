@@ -28,4 +28,10 @@ export async function orderRoutes(
 
     return reply.code(201).send(order);
   });
+
+  app.get("/orders", async () => {
+    const orders = await orderService.getAllOrders();
+
+    return orders;
+  });
 }

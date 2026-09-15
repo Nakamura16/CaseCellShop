@@ -12,6 +12,10 @@ export class OrderService {
     private readonly productRepository: ProductRepository,
   ) {}
 
+  async getAllOrders(): Promise<Order[]> {
+    return this.orderRepository.getAll();
+  }
+
   async createOrder(
     request: CreateOrderRequest,
     idempotencyKey: string,

@@ -27,4 +27,16 @@ export class OrderApi {
 
     return result;
   }
+
+  async getOrders(): Promise<Order[]> {
+    const response = await fetch(`${this.baseUrl}/orders`);
+
+    if (!response.ok) {
+      throw new Error("Não foi possível carregar os pedidos.");
+    }
+
+    const result: Order[] = await response.json();
+
+    return result;
+  }
 }

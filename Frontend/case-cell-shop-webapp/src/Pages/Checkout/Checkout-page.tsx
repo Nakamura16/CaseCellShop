@@ -30,6 +30,7 @@ function CheckoutPage() {
       }
 
       alert("Pedido realizado com sucesso!");
+      navigate("/orders");
     } catch (error) {
       alert(
         error instanceof Error
