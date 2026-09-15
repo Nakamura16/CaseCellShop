@@ -1,28 +1,32 @@
 import { FastifyInstance } from "fastify";
 import { ProductService } from "../Services/product-service";
+import { AppError } from "../Error/AppError";
 
 export async function productRoutes(
   app: FastifyInstance,
   productService: ProductService,
 ) {
   app.get("/products", async () => {
-    return productService.getAll();
+    const products = await productService.getAll();
+
+    return {
+      success: true,
+      data: products,
+    };
   });
 
-  app.get<{ Params: { id: string } }>(
-    "/products/:id",
-    async (request, reply) => {
-      const { id } = request.params;
+  app.get<{ Params: { id: string } }>("/products/:id", async (request) => {
+    const { id } = request.params;
 
-      const product = await productService.getById(id);
+    const product = await productService.getById(id);
 
-      if (!product) {
-        return reply.code(404).send({
-          message: "Product not found",
-        });
-      }
+    if (!product) {
+      throw new AppError("PRODUCT_NOT_FOUND", "Product not found", 404);
+    }
 
-      return product;
-    },
-  );
+    return {
+      success: true,
+      data: product,
+    };
+  });
 }
