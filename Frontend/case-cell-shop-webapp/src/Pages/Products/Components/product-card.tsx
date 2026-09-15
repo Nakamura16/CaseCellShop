@@ -1,24 +1,23 @@
 import { Product } from "../../../Model/product";
+import { useCart } from "../../../Context/CartContext";
 import QuantitySelector from "./quantity-selector";
 
 interface ProductCardProps {
   product: Product;
   quantity: number;
-  isPurchasing: boolean;
   onIncreaseQuantity: () => void;
   onDecreaseQuantity: () => void;
-  onPurchase: () => void;
 }
 
 function ProductCard({
   product,
   quantity,
-  isPurchasing,
   onIncreaseQuantity,
   onDecreaseQuantity,
-  onPurchase,
 }: ProductCardProps) {
   const isOutOfStock = product.stock === 0;
+
+  const { addItem } = useCart();
 
   return (
     <article className="product-card">
@@ -62,17 +61,15 @@ function ProductCard({
             <QuantitySelector
               quantity={quantity}
               max={product.stock}
-              disabled={isPurchasing}
               onIncrease={onIncreaseQuantity}
               onDecrease={onDecreaseQuantity}
             />
 
             <button
               className="buy-button"
-              disabled={isPurchasing}
-              onClick={onPurchase}
+              onClick={() => addItem(product, quantity)}
             >
-              {isPurchasing ? "Processando..." : "Comprar agora"}
+              Adicionar ao carrinho
             </button>
           </>
         )}
