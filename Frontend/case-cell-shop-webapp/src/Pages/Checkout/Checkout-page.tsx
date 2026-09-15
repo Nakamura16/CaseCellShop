@@ -1,9 +1,43 @@
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../Context/AuthContext";
 import { useCart } from "../../Context/CartContext";
+import { OrderApi } from "../../Api/order-api";
+
 import "./checkout-page.css";
 
 function CheckoutPage() {
   const { items, total, increaseQuantity, decreaseQuantity, removeItem } =
     useCart();
+
+  const { isAuthenticated } = useAuth();
+
+  const navigate = useNavigate();
+  const orderApi = new OrderApi();
+
+  async function handleFinishOrder() {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      for (const item of items) {
+        await orderApi.createOrder({
+          productId: item.product.id,
+          quantity: item.quantity,
+        });
+      }
+
+      alert("Pedido realizado com sucesso!");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível realizar o pedido.",
+      );
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -24,6 +58,7 @@ function CheckoutPage() {
       <header className="checkout-header">
         <div>
           <span className="section-label">CHECKOUT</span>
+
           <h1>Finalizar pedido</h1>
         </div>
       </header>
@@ -95,6 +130,7 @@ function CheckoutPage() {
 
           <div className="summary-row">
             <span>Frete</span>
+
             <span>Grátis</span>
           </div>
 
@@ -106,7 +142,9 @@ function CheckoutPage() {
             <strong>R$ {total.toFixed(2).replace(".", ",")}</strong>
           </div>
 
-          <button className="checkout-submit">Finalizar compra</button>
+          <button className="checkout-submit" onClick={handleFinishOrder}>
+            Finalizar compra
+          </button>
         </aside>
       </div>
     </main>

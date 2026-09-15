@@ -1,25 +1,10 @@
 import { CreateOrderRequest, Order } from "../Model/order";
 
-interface ApiSuccess<T> {
-  success: true;
-  data: T;
-}
-
-interface ApiError {
-  success: false;
-  error: {
-    code: string;
-    message: string;
-  };
-}
-
-type ApiResponse<T> = ApiSuccess<T> | ApiError;
-
 export class OrderApi {
   private readonly baseUrl = "http://localhost:3000";
 
   async createOrder(request: CreateOrderRequest): Promise<Order> {
-    const idempotencyKey = crypto.randomUUID();
+    const idempotencyKey = globalThis.crypto.randomUUID();
 
     const response = await fetch(`${this.baseUrl}/orders`, {
       method: "POST",
@@ -30,16 +15,16 @@ export class OrderApi {
       body: JSON.stringify(request),
     });
 
-    const result: ApiResponse<Order> = await response.json();
+    if (!response.ok) {
+      const result = await response.json();
 
-    if (!response.ok || !result.success) {
-      if (!result.success) {
-        throw new Error(result.error.message);
-      }
-
-      throw new Error("Não foi possível realizar a compra.");
+      throw new Error(
+        result?.error?.message ?? "Não foi possível realizar o pedido.",
+      );
     }
 
-    return result.data;
+    const result: Order = await response.json();
+
+    return result;
   }
 }
