@@ -1,4 +1,5 @@
 import { useCart } from "../../../Context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 interface CartProps {
   onClose: () => void;
@@ -7,6 +8,8 @@ interface CartProps {
 function Cart({ onClose }: CartProps) {
   const { items, total, increaseQuantity, decreaseQuantity, removeItem } =
     useCart();
+
+  const navigate = useNavigate();
 
   return (
     <aside className="cart-panel">
@@ -84,7 +87,12 @@ function Cart({ onClose }: CartProps) {
               <strong>R$ {total.toFixed(2).replace(".", ",")}</strong>
             </div>
 
-            <button className="checkout-button">Ir para checkout</button>
+            <button
+              className="checkout-button"
+              onClick={() => navigate("/checkout")}
+            >
+              Ir para checkout
+            </button>
           </div>
         </>
       )}
