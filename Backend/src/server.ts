@@ -14,6 +14,8 @@ import { productRoutes } from "./routes/product-routes";
 import { orderRoutes } from "./routes/order-routes";
 
 import { registerErrorHandler } from "./Error/error-handler";
+import { AuthService } from "./Services/auth-service";
+import { authRoutes } from "./routes/auth-route";
 
 const app = Fastify({
   logger: true,
@@ -34,6 +36,7 @@ async function start() {
   const orderRepository = new OrderRepository(database);
 
   // Services
+
   const productService = new ProductService(productRepository);
 
   const orderService = new OrderService(
@@ -42,9 +45,12 @@ async function start() {
     productRepository,
   );
 
+  const authService = new AuthService();
+
   // Routes
   await productRoutes(app, productService);
   await orderRoutes(app, orderService);
+  await authRoutes(app, authService);
 
   app.get("/", async () => {
     return {
