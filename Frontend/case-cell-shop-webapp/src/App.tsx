@@ -1,4 +1,4 @@
-import ProductsPage from "./Pages/products-page";
+import ProductsPage from "./Pages/Products/products-page";
 
 function App() {
   return <ProductsPage />;
