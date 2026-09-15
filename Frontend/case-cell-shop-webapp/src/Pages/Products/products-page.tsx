@@ -148,7 +148,15 @@ function ProductsPage() {
         </div>
 
         {successMessage && (
-          <div className="success-message">✓ {successMessage}</div>
+          <div className="order-success">
+            <div className="order-success-icon">✓</div>
+
+            <div>
+              <strong>Compra realizada!</strong>
+
+              <span>{successMessage}</span>
+            </div>
+          </div>
         )}
 
         {error && <div className="purchase-error">{error}</div>}
