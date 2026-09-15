@@ -3,6 +3,7 @@ import { Database } from "sqlite";
 import { CreateOrderRequest, Order, OrderItem } from "../Models/order";
 import { OrderRepository } from "../Repositories/Implementation/order-repository";
 import { ProductRepository } from "../Repositories/Implementation/product-repository";
+import { AppError } from "../Error/AppError";
 
 export class OrderService {
   constructor(
@@ -31,7 +32,7 @@ export class OrderService {
       const product = await this.productRepository.findById(request.productId);
 
       if (!product) {
-        throw new Error("Product not found");
+        throw new AppError("PRODUCT_NOT_FOUND", "Product not found", 404);
       }
 
       const updatedAt = new Date().toISOString();
@@ -43,7 +44,7 @@ export class OrderService {
       );
 
       if (!stockUpdated) {
-        throw new Error("Insufficient stock");
+        throw new AppError("INSUFFICIENT_STOCK", "Insufficient stock", 409);
       }
 
       const order = this.createOrderEntity(
@@ -77,15 +78,23 @@ export class OrderService {
     idempotencyKey: string,
   ): void {
     if (!request.productId) {
-      throw new Error("ProductId is required");
+      throw new AppError("VALIDATION_ERROR", "ProductId is required", 400);
     }
 
     if (!Number.isInteger(request.quantity) || request.quantity <= 0) {
-      throw new Error("Quantity must be a positive integer");
+      throw new AppError(
+        "VALIDATION_ERROR",
+        "Quantity must be a positive integer",
+        400,
+      );
     }
 
     if (!idempotencyKey) {
-      throw new Error("Idempotency-Key is required");
+      throw new AppError(
+        "VALIDATION_ERROR",
+        "Idempotency-Key is required",
+        400,
+      );
     }
   }
 

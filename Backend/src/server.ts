@@ -12,9 +12,12 @@ import { OrderService } from "./Services/order-service";
 import { productRoutes } from "./routes/product-routes";
 import { orderRoutes } from "./routes/order-routes";
 
+import { registerErrorHandler } from "./Error/error-handler";
+
 const app = Fastify({
   logger: true,
 });
+registerErrorHandler(app);
 
 async function start() {
   const database = await createDatabase();
