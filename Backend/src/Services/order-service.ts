@@ -1,15 +1,15 @@
 import { randomUUID } from "node:crypto";
 import { Database } from "sqlite";
 import { CreateOrderRequest, Order, OrderItem } from "../Models/order";
-import { OrderRepository } from "../Repositories/Implementation/order-repository";
-import { ProductRepository } from "../Repositories/Implementation/product-repository";
+import { IOrderRepository } from "../Repositories/Interfaces/order-repository";
+import { IProductRepository } from "../Repositories/Interfaces/product-repository";
 import { AppError } from "../Error/AppError";
 
 export class OrderService {
   constructor(
     private readonly database: Database,
-    private readonly orderRepository: OrderRepository,
-    private readonly productRepository: ProductRepository,
+    private readonly orderRepository: IOrderRepository,
+    private readonly productRepository: IProductRepository,
   ) {}
 
   async getAllOrders(): Promise<Order[]> {
