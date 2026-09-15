@@ -17,6 +17,53 @@ O foco principal do projeto foi implementar um fluxo de checkout simples, mas co
 - testes automatizados;
 - execução via Docker.
 
+# CaseCellShop
+
+## Sumário
+
+- [Como executar](#como-executar)
+- [Credenciais](#credenciais)
+- [Arquitetura](#arquitetura)
+- [Estrutura](#estrutura)
+- [Comunicação entre Frontend e Backend](#comunicação-entre-frontend-e-backend)
+- [Docker e comunicação de rede](#docker-e-comunicação-de-rede)
+- [CORS](#cors)
+- [API](#api)
+  - [GET /products](#get-products)
+  - [GET /products/:id](#get-productsid)
+  - [POST /orders](#post-orders)
+  - [Fluxo de criação do pedido](#fluxo-de-criação-do-pedido)
+  - [Validação](#validação)
+  - [Produto inexistente](#produto-inexistente)
+  - [Estoque insuficiente](#estoque-insuficiente)
+  - [Controle de estoque](#controle-de-estoque)
+  - [Transações](#transações)
+  - [Idempotência](#idempotência)
+  - [GET /orders](#get-orders)
+  - [POST /auth/login](#post-authlogin)
+- [Padrão de respostas](#padrão-de-respostas)
+- [Tratamento de erros](#tratamento-de-erros)
+- [Banco de dados](#banco-de-dados)
+- [Modelo de dados](#modelo-de-dados)
+- [Snapshot do preço](#snapshot-do-preço)
+- [Frontend](#frontend)
+- [Fluxo do frontend](#fluxo-do-frontend)
+- [Limitação atual do checkout](#limitação-atual-do-checkout)
+- [Testes](#testes)
+- [ZOMBIES](#zombies)
+- [TDD](#tdd)
+- [Testes de concorrência](#testes-de-concorrência)
+- [Docker](#docker)
+- [Persistência no Docker](#persistência-no-docker)
+- [Variáveis e configuração](#variáveis-e-configuração)
+- [Decisões técnicas](#decisões-técnicas)
+- [Limitações atuais](#limitações-atuais)
+- [Próximos passos](#próximos-passos)
+- [Scripts](#scripts)
+- [Objetivo do projeto](#objetivo-do-projeto)
+
+---
+
 ## Stack
 
 ### Backend
